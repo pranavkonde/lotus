@@ -58,10 +58,12 @@
    - This will get merged in a `Post Release` step.
 <!--{{if eq .Level "patch"}})-->
 <!--  {{if contains "Node" .Type}}-->
-- [ ] Fork a new `release/v{{.Tag}}` branch from the last stable `release/vX.Y.x` and make any further release-related changes to this branch.
+- [ ] Fork a new `release/v{{.Tag}}` branch from the `master` branch and make any further release-related changes to this branch.
+   - Note: For critical security patches, fork a new branch from the last stable `release/vX.Y.x` to expedite the release process.
 <!--  {{end}}-->
 <!--  {{if contains "Miner" .Type}}-->
-- [ ] Fork a new `release/miner/v{{.Tag}}` branch from the last stable `release/miner/vX.Y.x` and make any further release-related changes to this branch.
+- [ ] Fork a new `release/miner/v{{.Tag}}` branch from the `master` branch and make any further release-related changes to this branch.
+   - Note: For critical security patches, fork a new branch from the last stable `release/vX.Y.x` to expedite the release process.
 <!--  {{end}}-->
 <!--{{end}}-->
 <!--{{if eq .Level "minor"}}-->
