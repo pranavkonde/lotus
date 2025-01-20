@@ -45,6 +45,9 @@
 # ✅ Release Checklist
 
 ## ⬅️  Before RC1
+<details>
+  <summary>Section</summary>
+
 <!--{{if ne .NetworkUpgrade ""}}-->
 - [ ] Make sure all [Lotus dependencies are updated to the correct versions for the network upgrade](https://github.com/filecoin-project/lotus/blob/master/documentation/misc/Update_Dependencies_Lotus.md)
    - Link to Lotus PR:
@@ -87,6 +90,7 @@
      - Link to PR:
    - [ ] Merge PR
 <!--{{end}}-->
+</details>
 
 ## 🏎️  RCs
 
@@ -96,6 +100,9 @@
 <!--    {{$tagSuffix = printf "-%s" $rc}}-->
 <!--  {{end}}-->
 ### {{$rc}}
+<details>
+  <summary>Section</summary>
+
 > [!IMPORTANT]
 > These PRs should be done in and target the `release/v{{$.Tag}}` or `release/miner/v{{$.Tag}}` branch.
 
@@ -150,13 +157,18 @@
 > Link to any special steps for testing releases beyond ensuring CI is green.  Steps can be inlined here or tracked elsewhere.
 
 <!--{{end}}-->
+</details>
 
 ## ➡ Post-Release
+<details>
+  <summary open>Section</summary>
 
 - [ ] Open a PR against `master` cherry-picking the CHANGELOG commits from the `release/v{{.Tag}}` branch. Title it `chore(release): cherry-pick v{{.Tag}} changelog back to master`
    - Link to PR:
    - Assuming we followed [the process of merging changes into `master` first before backporting to the release branch](https://github.com/filecoin-project/lotus/blob/master/LOTUS_RELEASE_FLOW.md#branch-and-tag-strategy), the only changes should be CHANGELOG updates.
 - [ ] Finish updating/merging the [RELEASE_ISSUE_TEMPLATE.md](https://github.com/filecoin-project/lotus/blob/master/documentation/misc/RELEASE_ISSUE_TEMPLATE.md) PR from `Before RC1` with any improvements determined from this latest release iteration.
+
+</details>
 
 # ❤️ Contributors
 
