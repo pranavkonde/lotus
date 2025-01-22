@@ -28,5 +28,7 @@ jobs:
         days-before-issue-close: 3
         days-before-pr-stale: 5
         days-before-pr-close: 3
+        draft-days-before-stale: 1050    # 35 months * 30 days
+        draft-days-before-close: -1      # Don't automatically close draft PRs
         remove-stale-when-updated: true
         enable-statistics: true
