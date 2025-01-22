@@ -1,0 +1,77 @@
+name: Mark Stale Draft PRs
+
+on:
+  schedule:
+    # Run daily at midnight UTC
+    - cron: '0 0 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  stale-draft:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Check Draft PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date();
+            const thirtyFiveMonthsAgo = new Date(now.setMonth(now.getMonth() - 35));
+            
+            const query = `query($cursor: String) {
+              repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                pullRequests(first: 100, after: $cursor, states: OPEN, isDraft: false) {
+                  nodes {
+                    number
+                    createdAt
+                    labels(first: 100) {
+                      nodes {
+                        name
+                      }
+                    }
+                  }
+                  pageInfo {
+                    hasNextPage
+                    endCursor
+                  }
+                }
+              }
+            }`;
+            
+            async function getAllDraftPRs() {
+              let cursor = null;
+              let allPRs = [];
+              
+              while (true) {
+                const response = await github.graphql(query, { cursor });
+                const prs = response.repository.pullRequests.nodes;
+                allPRs = allPRs.concat(prs);
+                
+                if (!response.repository.pullRequests.pageInfo.hasNextPage) {
+                  break;
+                }
+                cursor = response.repository.pullRequests.pageInfo.endCursor;
+              }
+              
+              return allPRs;
+            }
+            
+            const prs = await getAllDraftPRs();
+            
+            for (const pr of prs) {
+              const createdAt = new Date(pr.createdAt);
+              const hasStaleLabel = pr.labels.nodes.some(label => label.name === 'kind/stale');
+              
+              if (createdAt < thirtyFiveMonthsAgo && !hasStaleLabel) {
+                console.log(`Adding stale label to PR #${pr.number}`);
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  labels: ['kind/stale']
+                });
+              }
+            }
